@@ -3,10 +3,10 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
-import { connectDb } from "../src/config/db";
-import { errorHandler } from "./utils/errorHandler";
-import AdminRoutes from "./routes/AdminRoutes";
-import UserRoutes from "./routes/UserRoutes";
+import { connectDb } from "./src/config/db";
+import { errorHandler } from "./src/utils/errorHandler";
+import AdminRoutes from "./src/routes/AdminRoutes";
+import UserRoutes from "./src/routes/UserRoutes";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
