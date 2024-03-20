@@ -8,7 +8,7 @@ module.exports = {
             autorestart: true,
             watch: false, // Disable watch mode in production
             ignore_watch: ['node_modules'],
-            max_memory_restart: '1G'
+            max_memory_restart: '1G' 
         },
     ],
 };
