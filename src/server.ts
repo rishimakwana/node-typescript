@@ -25,8 +25,18 @@ app.use(bodyParser.json());
 app.use("/api/admin", AdminRoutes);
 app.use("/api/", UserRoutes);
 app.get('/', (req, res) => {
-  res.send('Hello ! This is a GET request.');
+  res.send('Hello ! This is a GET request.--------------------------------');
 });
+const dummyUsers = [
+  { id: 1, name: "John Doe", email: "john@example.com" },
+  { id: 2, name: "Jane Doe", email: "jane@example.com" },
+];
+
+// Endpoint to send dummy user data
+app.get("/users", (req, res) => {
+  res.json(dummyUsers);
+});
+
 // Error handling middleware
 app.use(errorHandler);
 
