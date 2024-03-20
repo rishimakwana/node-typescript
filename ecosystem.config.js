@@ -3,12 +3,12 @@ module.exports = {
         {
             name: 'test',
             script: 'src/server.ts',
-            interpreter: 'ts-node-dev',
-            instances: 1,
+            interpreter: 'ts-node',
+            instances: 1, 
             autorestart: true,
-            watch: true,
+            watch: false, // Disable watch mode in production
             ignore_watch: ['node_modules'],
-            max_memory_restart: '1G',
+            max_memory_restart: '1G'
         },
     ],
 };
