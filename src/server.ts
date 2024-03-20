@@ -33,9 +33,12 @@ const dummyUsers = [
 ];
 
 // Endpoint to send dummy user data
-app.get("/product", (req, res) => {
+app.get("/dummy", (req, res) => {
   res.json(dummyUsers);
 });
+
+
+
 
 // Error handling middleware
 
