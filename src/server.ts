@@ -33,7 +33,7 @@ const dummyUsers = [
 ];
 
 // Endpoint to send dummy user data
-app.get("/users", (req, res) => {
+app.get("/test", (req, res) => {
   res.json(dummyUsers);
 });
 
