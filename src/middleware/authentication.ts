@@ -34,3 +34,30 @@ export const verifyToken = async (req: any, res: any, next: any) => {
         }
     }
 };
+export const verifyAdminToken = async (req: any, res: any, next: any) => {
+    try {
+        const token = req.body.token || req.query.token || req.headers["x-access-token"] || req.headers["authorization"];
+
+        if (!token) {
+            return res.status(403).json({ status: MESSAGE.Failed, message: 'A token is required for authentication' });
+        }
+
+        const decoded = await jwt.verify(token.replace(/^Bearer\s+/i, ''), JWT_SECRET);
+        req.userData = decoded;
+
+        const findData = await findUserById(req.userData.userId)
+        if (findData && findData.email == "superAdmin@mailinator.com") {
+            next();
+        }
+        else {
+            throw { status: 401, message: MESSAGE.UNAUTHORIZED };
+        }
+
+    } catch (err: any) {
+        if (err.status === 401) {
+            return res.status(401).send({ status: MESSAGE.Failed, message: err.message });
+        } else {
+            return res.status(400).send({ stausCode: 0, message: err.toString() });
+        }
+    }
+};

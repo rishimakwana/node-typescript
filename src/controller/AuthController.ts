@@ -10,19 +10,17 @@ import { sendErrorResponse, sendSuccessResponse } from '../utils/responder';
 export const Authcontroller = {
     signup: async (req: any, res: any) => {
         try {
-            const { email, password, name } = req.body;
+            const { email, password, name, role } = req.body;
             const existingUser = await findByEmail(email);
             if (existingUser) {
                 throw { status: 400, message: MESSAGE.EMAIL_ALREADY_EXISTS };
             }
-
+            req.body.role = role || 'user';
             const encryptedPassword = await encryptPass(password);
-            let newUser = new User({
-                email,
-                password: encryptedPassword,
-                name: name || '',
+            const newUser = new User({
+                ...req.body,
+                password: encryptedPassword
             });
-
 
             //enable if verification of email requires
             // const verificationToken = uuidv4();
@@ -40,7 +38,7 @@ export const Authcontroller = {
     login: async (req: any, res: any) => {
         try {
             const { email, password } = req.body;
-            const user = await findByEmail(email);
+            const user: any = await findByEmail(email);
 
             if (!user) {
                 throw { status: 400, message: MESSAGE.USER_NOT_FOUND };
@@ -50,7 +48,7 @@ export const Authcontroller = {
             if (!isPasswordValid) {
                 throw { status: 400, message: MESSAGE.INVALID_EMAIL_PWD };
             }
-
+            delete user.password;
             const token = await createToken(user.email, user._id);
 
             return res.status(200).json({ success: true, user, token });
@@ -92,7 +90,7 @@ export const Authcontroller = {
             if (!password || !resetToken) {
                 throw { status: 400, message: MESSAGE.PASS_REQ_RESET_TOKEN };
             }
-            const user:any = await findByResetToken(resetToken);
+            const user: any = await findByResetToken(resetToken);
 
             if (!user) {
                 throw { status: 404, message: MESSAGE.INVALID_RESET_TOKEN };
