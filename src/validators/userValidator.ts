@@ -11,7 +11,7 @@ export const passwordValidationRules = [
         .isLength({ min: 6 }).withMessage(MESSAGE.INVALID_PASS_LENGTH)
 ];
 
-export const emailAndPasswordValidationRules = [
-    ...emailValidationRules,
-    ...passwordValidationRules
-];
+// export const emailAndPasswordValidationRules = [
+//     ...emailValidationRules,
+//     ...passwordValidationRules
+// ];

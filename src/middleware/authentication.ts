@@ -15,22 +15,36 @@ export const verifyToken = async (req: any, res: any, next: any) => {
             return res.status(403).json({ status: MESSAGE.Failed, message: 'A token is required for authentication' });
         }
 
-        const decoded = await jwt.verify(token.replace(/^Bearer\s+/i, ''), JWT_SECRET);
-        req.userData = decoded;
+        // Check if the token starts with "Bearer " and remove it
+        const tokenWithoutBearer = token.replace(/^Bearer\s+/i, '');
 
-        const findData = await findUserById(req.userData.userId)
+        const decoded = await jwt.verify(tokenWithoutBearer, JWT_SECRET);
+
+        // Attach decoded user data to the request object
+        req.userData = decoded;
+        console.log(decoded, "decoded-----------");
+
+        // Find user by user ID extracted from the token
+        const findData = await findUserById(req.userData.userId);
+        console.log(findData, "findData-------------");
+
         if (findData) {
+            // If user is found, proceed to the next middleware
             next();
-        }
-        else {
+        } else {
+            // If user is not found, throw an unauthorized error
             throw { status: 401, message: MESSAGE.UNAUTHORIZED };
         }
 
     } catch (err: any) {
+        console.log(err, "err*/////////////////");
+
         if (err.status === 401) {
+            // Unauthorized error
             return res.status(401).send({ status: MESSAGE.Failed, message: err.message });
         } else {
-            return res.status(400).send({ stausCode: 0, message: err.toString() });
+            // Other errors
+            return res.status(400).send({ statusCode: 0, message: err.toString() });
         }
     }
 };

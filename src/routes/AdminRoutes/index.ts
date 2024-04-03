@@ -9,11 +9,11 @@ import PackageRoutes from "./PackageRoutes";
 import UserManagementRoutes from "./UserManagementRoutes";
 
 
+router.use("/", UserManagementRoutes);
 router.use("/rental", RentalRoutes);
 router.use("/blogs", BlogRoutes);
 router.use("/policy", PolicyRoutes);
 router.use("/payment", PaymentRoutes);
 router.use("/package", PackageRoutes);
-router.use("/", UserManagementRoutes);
 
 export default router;

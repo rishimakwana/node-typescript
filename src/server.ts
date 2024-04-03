@@ -26,8 +26,8 @@ app.use(bodyParser.json());
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Routes
-app.use("/api/admin", AdminRoutes);
-app.use("/api/", UserRoutes);
+app.use("/api", UserRoutes);
+app.use("/admin", AdminRoutes);
 app.use(errorHandler);
 
 // Start the server

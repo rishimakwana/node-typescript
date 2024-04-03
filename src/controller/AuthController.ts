@@ -11,12 +11,15 @@ export const Authcontroller = {
     signup: async (req: any, res: any) => {
         try {
             const { email, password, name, role } = req.body;
+            console.log(req.body,"req.body-+----------------");
             const existingUser = await findByEmail(email);
             if (existingUser) {
                 throw { status: 400, message: MESSAGE.EMAIL_ALREADY_EXISTS };
             }
             req.body.role = role || 'user';
             const encryptedPassword = await encryptPass(password);
+            console.log(encryptedPassword,"encr-+----------------");
+            
             const newUser = new User({
                 ...req.body,
                 password: encryptedPassword
@@ -31,6 +34,8 @@ export const Authcontroller = {
             const user = await newUser.save();
             sendSuccessResponse(res, MESSAGE.OK, MESSAGE.SIGNUPSUCCESS, user);
         } catch (error) {
+            console.log(error,"error*------------");
+            
             sendErrorResponse(error, res);
         }
     },
