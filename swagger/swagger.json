@@ -11,27 +11,9 @@
         }
     ],
     "paths": {
-        "/users": {
-            "get": {
-                "summary": "Get all users",
-                "responses": {
-                    "200": {
-                        "description": "A list of users",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/User"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
+        "/api/auth/signup": {
             "post": {
-                "summary": "Create a new user",
+                "summary": "Signup",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -44,7 +26,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "The newly created user",
+                        "description": "User Registerd successfully.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -56,42 +38,89 @@
                 }
             }
         },
-        "/users/{id}": {
-            "get": {
-                "summary": "Get user by ID",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
+        "/api/auth/login": {
+            "post": {
+                "summary": "Login",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "email",
+                                    "password"
+                                ]
+                            }
                         }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User logged in successfully."
+                    }
+                }
+            }
+        },
+        "/api/auth/request-password-reset": {
+            "post": {
+                "summary": "Forgot Password",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    }
+                                },
+                                "required": [
+                                    "email"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Password reset email sent successfully."
+                    }
+                }
+            }
+        },
+        "/api/user/profile": {
+            "get": {
+                "summary": "Get Profile",
+                "security": [
+                    {
+                        "BearerAuth": []
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "The user",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/User"
-                                }
-                            }
-                        }
+                        "description": "Return user's profile details."
                     }
                 }
-            },
+            }
+        },
+        "/api/user/update": {
             "put": {
-                "summary": "Update user by ID",
-                "parameters": [
+                "summary": "Update User",
+                "security": [
                     {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
+                        "BearerAuth": []
                     }
                 ],
                 "requestBody": {
@@ -106,32 +135,675 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "The updated user",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/User"
+                        "description": "User updated successfully."
+                    }
+                }
+            }
+        },
+        "/api/user/deleteUser": {
+            "delete": {
+                "summary": "Delete User",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User deleted successfully."
+                    }
+                }
+            }
+        },
+        "/admin/getAll": {
+            "get": {
+                "summary": "Get All Users (Admin)",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Return all users."
+                    }
+                }
+            }
+        },
+        "/admin/getOne": {
+            "post": {
+                "summary": "Get One User (Admin)",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "id"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Return user with specified ID."
+                    }
+                }
+            }
+        },
+        "/admin/updateProfile": {
+            "put": {
+                "summary": "Update User Profile (Admin)",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/User"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User profile updated successfully."
+                    }
+                }
+            }
+        },
+        "/admin/deleteUser": {
+            "delete": {
+                "summary": "Delete User (Admin)",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "id"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User deleted successfully."
+                    }
+                }
+            }
+        },
+        "/admin/rental/rentals": {
+            "get": {
+                "summary": "Get All Rentals",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Return all rentals."
+                    }
+                }
+            },
+            "post": {
+                "summary": "Create Rental",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "location": {
+                                        "type": "string"
+                                    },
+                                    "pricePerDay": {
+                                        "type": "number"
+                                    }
+                                },
+                                "required": [
+                                    "name",
+                                    "description",
+                                    "location",
+                                    "pricePerDay"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Rental created successfully."
+                    }
+                }
+            }
+        },
+        "/admin/rental/rentals/{rentalId}": {
+            "get": {
+                "summary": "Get One Rental",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "rentalId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Return rental with specified ID."
+                    }
+                }
+            },
+            "put": {
+                "summary": "Update Rental",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "rentalId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "location": {
+                                        "type": "string"
+                                    },
+                                    "pricePerDay": {
+                                        "type": "number"
+                                    }
                                 }
                             }
+                        }
+                    },
+                    "responses": {
+                        "200": {
+                            "description": "Rental updated successfully."
                         }
                     }
                 }
             },
             "delete": {
-                "summary": "Delete user by ID",
+                "summary": "Delete Rental",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "rentalId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Rental deleted successfully."
+                    }
+                }
+            }
+        },
+        "/admin/blogs": {
+            "get": {
+                "summary": "Get All Blogs",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Return all blogs."
+                    }
+                }
+            },
+            "post": {
+                "summary": "Create Blog",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "title": {
+                                        "type": "string"
+                                    },
+                                    "content": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "title",
+                                    "content"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Blog created successfully."
+                    }
+                }
+            }
+        },
+        "/admin/blogs/{blogId}": {
+            "get": {
+                "summary": "Get One Blog",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "blogId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Return blog with specified ID."
+                    }
+                }
+            },
+            "put": {
+                "summary": "Update Blog",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "blogId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "title": {
+                                        "type": "string"
+                                    },
+                                    "content": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "responses": {
+                        "200": {
+                            "description": "Blog updated successfully."
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete Blog",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "blogId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Blog deleted successfully."
+                    }
+                }
+            }
+        },
+        "/admin/policies": {
+            "post": {
+                "summary": "Create Policy",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PolicyInput"
+                            }
+                        }
+                    },
+                    "responses": {
+                        "200": {
+                            "description": "Policy created successfully."
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get All Policies",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Return all policies."
+                    }
+                }
+            }
+        },
+        "/admin/policies/{id}": {
+            "get": {
+                "summary": "Get Policy By ID",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "integer"
+                            "type": "string"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "User deleted successfully"
+                        "description": "Return policy with specified ID."
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update Policy By ID",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PolicyUpdate"
+                            }
+                        }
+                    },
+                    "responses": {
+                        "200": {
+                            "description": "Policy updated successfully."
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete Policy By ID",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Policy deleted successfully."
+                    }
+                }
+            }
+        },
+        "/admin/process-payment": {
+            "post": {
+                "summary": "Process Payment",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PaymentInput"
+                            }
+                        }
+                    },
+                    "responses": {
+                        "200": {
+                            "description": "Payment processed successfully."
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/get-payment": {
+            "get": {
+                "summary": "Get Payments By User",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Return payments made by the user."
+                    }
+                }
+            }
+        },
+        "/admin/package": {
+            "post": {
+                "summary": "Create Package",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PackageInput"
+                            }
+                        }
+                    },
+                    "responses": {
+                        "200": {
+                            "description": "Package created successfully."
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get All Packages",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Return all packages."
+                    }
+                }
+            }
+        },
+        "/admin/package/{tripPackageId}": {
+            "put": {
+                "summary": "Update Package",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "tripPackageId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PackageInput"
+                            }
+                        }
+                    },
+                    "responses": {
+                        "200": {
+                            "description": "Package updated successfully."
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete Package",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "tripPackageId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Package deleted successfully."
                     }
                 }
             }
@@ -139,27 +811,105 @@
     },
     "components": {
         "schemas": {
+            "PackageInput": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "destination": {
+                        "type": "string"
+                    },
+                    "days": {
+                        "type": "number"
+                    },
+                    "price": {
+                        "type": "number"
+                    }
+                },
+                "required": [
+                    "name",
+                    "description",
+                    "destination",
+                    "days",
+                    "price"
+                ]
+            },
+            "PaymentInput": {
+                "type": "object",
+                "properties": {
+                    "amount": {
+                        "type": "number"
+                    }
+                },
+                "required": [
+                    "amount"
+                ]
+            },
             "User": {
                 "type": "object",
                 "properties": {
-                    "id": {
-                        "type": "integer"
-                    },
-                    "firstName": {
-                        "type": "string"
-                    },
-                    "lastName": {
+                    "name": {
                         "type": "string"
                     },
                     "email": {
                         "type": "string",
                         "format": "email"
                     },
-                    "age": {
+                    "password": {
+                        "type": "string"
+                    },
+                    "phone": {
+                        "type": "integer"
+                    },
+                    "address": {
                         "type": "integer",
                         "minimum": 0
                     }
                 }
+            },
+            "PolicyInput": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "coverage": {
+                        "type": "number"
+                    }
+                },
+                "required": [
+                    "name",
+                    "description",
+                    "coverage"
+                ]
+            },
+            "PolicyUpdate": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "coverage": {
+                        "type": "number"
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "BearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
             }
         }
     }

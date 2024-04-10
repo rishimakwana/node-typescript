@@ -25,7 +25,7 @@ const PackageSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 // Indexes
-PackageSchema.index({ _id: 1 });
+// PackageSchema.index({ _id: 1 });
 const Package = mongoose.model('Package', PackageSchema);
 
 export default Package;

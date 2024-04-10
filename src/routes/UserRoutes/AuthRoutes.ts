@@ -1,19 +1,13 @@
 import express from 'express';
 import { Authcontroller } from '../../controller/AuthController';
 import { limiter } from "../../middleware/rateLimit";
-import { passwordValidationRules, emailValidationRules } from '../../validators/userValidator';
+import { loginValidationRules, resetPasswordTokenRules, resetPaswordRules, signupValidationRules } from '../../validators/userValidator';
 import validate  from '../../validators/validate';
 
-// Combined validation rule for email and password
-const emailAndPasswordValidationRules = [
-    ...emailValidationRules,
-    ...passwordValidationRules
-];
-
 const router = express.Router();
-router.post('/signup', emailAndPasswordValidationRules, validate, Authcontroller.signup);
-router.post('/login', emailAndPasswordValidationRules, validate, Authcontroller.login);
-router.post('/request-password-reset', emailValidationRules, validate, limiter, Authcontroller.requestPasswordReset);
-router.post('/reset-password/:resetToken', emailValidationRules, validate, Authcontroller.resetPassword);
+router.post('/signup', signupValidationRules, validate, Authcontroller.signup);
+router.post('/login', loginValidationRules, validate, Authcontroller.login);
+router.post('/request-password-reset', resetPaswordRules, validate, limiter, Authcontroller.requestPasswordReset);
+router.post('/reset-password/:resetToken', resetPasswordTokenRules, validate, Authcontroller.resetPassword);
 
 export default router;

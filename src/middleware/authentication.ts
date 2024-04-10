@@ -22,12 +22,9 @@ export const verifyToken = async (req: any, res: any, next: any) => {
 
         // Attach decoded user data to the request object
         req.userData = decoded;
-        console.log(decoded, "decoded-----------");
 
         // Find user by user ID extracted from the token
         const findData = await findUserById(req.userData.userId);
-        console.log(findData, "findData-------------");
-
         if (findData) {
             // If user is found, proceed to the next middleware
             next();
@@ -37,8 +34,6 @@ export const verifyToken = async (req: any, res: any, next: any) => {
         }
 
     } catch (err: any) {
-        console.log(err, "err*/////////////////");
-
         if (err.status === 401) {
             // Unauthorized error
             return res.status(401).send({ status: MESSAGE.Failed, message: err.message });
