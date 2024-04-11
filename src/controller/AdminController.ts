@@ -48,7 +48,7 @@ export const AdminController = {
     },
     getOneUser: async (req: any, res: any) => {
         try {
-            const userId = req.body.userId;
+            const userId = req.params.id;
             const user = await findUserById(userId);
             if (!user) {
                 throw { status: 404, message: MESSAGE.USER_NOT_FOUND };
@@ -61,7 +61,10 @@ export const AdminController = {
 
     updateProfile: async (req: any, res: any) => {
         try {
-            const data = req.body.userId;
+            const data = req.body;
+            if (!data.userId) {
+                return res.status(404).json({ error: MESSAGE.USER_NOT_FOUND });
+            }
             const user = await findUserById(data.userId);
 
             if (!user) {
@@ -71,7 +74,6 @@ export const AdminController = {
             if (req.file) {
                 data.profilePicture = req.file.path;
             }
-
             const updateResult: any = await updateUser(data.userId, data);
 
             if (updateResult.nModified === 0) {
@@ -86,7 +88,7 @@ export const AdminController = {
 
     deleteUser: async (req: any, res: any) => {
         try {
-            const userId = req.body.userId;
+            const userId = req.body.id;
             const user = await findUserById(userId);
 
             if (!user) {

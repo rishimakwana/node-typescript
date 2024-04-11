@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema(
         name: { type: String, trim: true },
         role: { type: String, default: 'user' },
         isActive: { type: Boolean, default: true },
-        phone: { type: String, trim: true },
+        phone: { type: Number, trim: true },
         address: { type: String, trim: true },
         profilePicture: { type: String },
         bookingHistory: { type: Array, default: [] },

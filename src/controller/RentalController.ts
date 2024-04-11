@@ -1,6 +1,8 @@
 import { rentalService } from '../services/RentalService';
 import MESSAGE from '../helper/message';
 import { sendErrorResponse, sendSuccessResponse } from '../utils/responder';
+import Rental from '../models/RentalSchema';
+import { createEntity } from '../helper/commonServices';
 
 export const RentalController = {
     getAllRentals: async (req: any, res: any) => {
@@ -14,9 +16,20 @@ export const RentalController = {
 
     createRental: async (req: any, res: any) => {
         try {
-            const { name, description, location, pricePerDay } = req.body;
-            const newRental = await rentalService.createRental(name, description, location, pricePerDay);
-            sendSuccessResponse(res, MESSAGE.OK, MESSAGE.RENTAL_CREATED, newRental);
+            const data = req.body;
+            const entity = await createEntity(Rental, data);
+            sendSuccessResponse(res, MESSAGE.OK, MESSAGE.RENTAL_CREATED, entity);
+        } catch (error) {
+            sendErrorResponse(error, res);
+        }
+    },
+    getRentalById: async (req: any, res: any) => {
+        try {
+            const rental = await rentalService.getRentalById(req.params.rentalId);
+            if (!rental) {
+                throw { status: 404, message: MESSAGE.RENTAL_NOT_FOUND };
+            }
+            sendSuccessResponse(res, MESSAGE.OK, MESSAGE.FETCH_DATA_SUCCESSFULLY, rental);
         } catch (error) {
             sendErrorResponse(error, res);
         }
@@ -45,7 +58,7 @@ export const RentalController = {
             if (!deletedRental) {
                 throw { status: 404, message: MESSAGE.RENTAL_NOT_FOUND };
             }
-            sendSuccessResponse(res, MESSAGE.OK, MESSAGE.RENTAL_DELETED, deletedRental);
+            sendSuccessResponse(res, MESSAGE.OK, MESSAGE.RENTAL_DELETED);
         } catch (error) {
             sendErrorResponse(error, res);
         }

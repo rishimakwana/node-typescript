@@ -10,7 +10,8 @@ export const signupValidationRules = [
         .isLength({ min: 6 }).withMessage(MESSAGE.INVALID_PASS_LENGTH),
     body('phone')
         .notEmpty().withMessage(MESSAGE.PHONE_REQR)
-        .isMobilePhone('any', { strictMode: false }).withMessage(MESSAGE.INVALID_PHONE),
+        .isNumeric().withMessage(MESSAGE.INVALID_PHONE)
+        .isLength({ min: 10 }).withMessage(MESSAGE.PHONE_MIN_LENGTH),
 
     body('name')
         .notEmpty().withMessage(MESSAGE.NAME_REQR)

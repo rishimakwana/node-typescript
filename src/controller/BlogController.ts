@@ -1,6 +1,8 @@
 import { blogService } from '../services/BlogService';
 import MESSAGE from '../helper/message';
 import { sendErrorResponse, sendSuccessResponse } from '../utils/responder';
+import { createEntity, getEntityById } from '../helper/commonServices';
+import Blog from '../models/BlogSchema';
 
 export const BlogController = {
     getAllBlogs: async (req: any, res: any) => {
@@ -11,11 +13,20 @@ export const BlogController = {
             sendErrorResponse(error, res);
         }
     },
+    getBlogById: async (req: any, res: any) => {
+        try {
+            const { blogId } = req.params;
+            const blogs = await getEntityById(Blog, blogId, MESSAGE.BLOG_NOT_FOUND);
+            sendSuccessResponse(res, MESSAGE.OK, MESSAGE.FETCH_DATA_SUCCESSFULLY, blogs);
+        } catch (error) {
+            sendErrorResponse(error, res);
+        }
+    },
     createBlog: async (req: any, res: any) => {
         try {
-            const { title, content } = req.body;
-            const blog = await blogService.createBlog(title, content);
-            sendSuccessResponse(res, MESSAGE.OK, MESSAGE.BLOG_CREATED, blog);
+            const data = req.body;
+            const entity = await createEntity(Blog, data);
+            sendSuccessResponse(res, MESSAGE.OK, MESSAGE.BLOG_CREATED, entity);
         } catch (error) {
             sendErrorResponse(error, res);
         }

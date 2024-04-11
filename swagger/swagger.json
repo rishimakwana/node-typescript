@@ -10,10 +10,47 @@
             "url": "http://localhost:3001"
         }
     ],
+    "tags": [
+        {
+            "name": "Authentication",
+            "description": "Endpoints related to user authentication"
+        },
+        {
+            "name": "User",
+            "description": "Endpoints related to user management"
+        },
+        {
+            "name": "Admin User Management",
+            "description": "Endpoints for admin functionalities"
+        },
+        {
+            "name": "Rental",
+            "description": "Endpoints for rental management"
+        },
+        {
+            "name": "Blog",
+            "description": "Endpoints for blog management"
+        },
+        {
+            "name": "Policy",
+            "description": "Endpoints for policy management"
+        },
+        {
+            "name": "Payment",
+            "description": "Endpoints for payment management"
+        },
+        {
+            "name": "Package",
+            "description": "Endpoints for package management"
+        }
+    ],
     "paths": {
         "/api/auth/signup": {
             "post": {
                 "summary": "Signup",
+                "tags": [
+                    "Authentication"
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -41,25 +78,15 @@
         "/api/auth/login": {
             "post": {
                 "summary": "Login",
+                "tags": [
+                    "Authentication"
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "email": {
-                                        "type": "string",
-                                        "format": "email"
-                                    },
-                                    "password": {
-                                        "type": "string"
-                                    }
-                                },
-                                "required": [
-                                    "email",
-                                    "password"
-                                ]
+                                "$ref": "#/components/schemas/Login"
                             }
                         }
                     }
@@ -74,6 +101,9 @@
         "/api/auth/request-password-reset": {
             "post": {
                 "summary": "Forgot Password",
+                "tags": [
+                    "Authentication"
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -100,9 +130,53 @@
                 }
             }
         },
+        "/api/auth/reset-password/{resetToken}": {
+            "post": {
+                "summary": "Forgot Password With Reset Token",
+                "tags": [
+                    "Authentication"
+                ],
+                "parameters": [
+                    {
+                        "name": "resetToken",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "password"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Password reset email sent successfully."
+                    }
+                }
+            }
+        },
         "/api/user/profile": {
             "get": {
                 "summary": "Get Profile",
+                "tags": [
+                    "User"
+                ],
                 "security": [
                     {
                         "BearerAuth": []
@@ -118,6 +192,9 @@
         "/api/user/update": {
             "put": {
                 "summary": "Update User",
+                "tags": [
+                    "User"
+                ],
                 "security": [
                     {
                         "BearerAuth": []
@@ -128,7 +205,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/User"
+                                "$ref": "#/components/schemas/UpdateUser"
                             }
                         }
                     }
@@ -143,6 +220,9 @@
         "/api/user/deleteUser": {
             "delete": {
                 "summary": "Delete User",
+                "tags": [
+                    "User"
+                ],
                 "security": [
                     {
                         "BearerAuth": []
@@ -158,6 +238,9 @@
         "/admin/getAll": {
             "get": {
                 "summary": "Get All Users (Admin)",
+                "tags": [
+                    "Admin User Management"
+                ],
                 "security": [
                     {
                         "BearerAuth": []
@@ -170,32 +253,27 @@
                 }
             }
         },
-        "/admin/getOne": {
-            "post": {
+        "/admin/getOne/{id}": {
+            "get": {
                 "summary": "Get One User (Admin)",
+                "tags": [
+                    "Admin User Management"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "id": {
-                                        "type": "string"
-                                    }
-                                },
-                                "required": [
-                                    "id"
-                                ]
-                            }
-                        }
-                    }
-                },
                 "responses": {
                     "200": {
                         "description": "Return user with specified ID."
@@ -206,6 +284,9 @@
         "/admin/updateProfile": {
             "put": {
                 "summary": "Update User Profile (Admin)",
+                "tags": [
+                    "Admin User Management"
+                ],
                 "security": [
                     {
                         "BearerAuth": []
@@ -216,7 +297,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/User"
+                                "$ref": "#/components/schemas/UpdateUser"
                             }
                         }
                     }
@@ -231,6 +312,9 @@
         "/admin/deleteUser": {
             "delete": {
                 "summary": "Delete User (Admin)",
+                "tags": [
+                    "Admin User Management"
+                ],
                 "security": [
                     {
                         "BearerAuth": []
@@ -264,6 +348,9 @@
         "/admin/rental/rentals": {
             "get": {
                 "summary": "Get All Rentals",
+                "tags": [
+                    "Rental"
+                ],
                 "security": [
                     {
                         "BearerAuth": []
@@ -277,6 +364,9 @@
             },
             "post": {
                 "summary": "Create Rental",
+                "tags": [
+                    "Rental"
+                ],
                 "security": [
                     {
                         "BearerAuth": []
@@ -287,27 +377,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "name": {
-                                        "type": "string"
-                                    },
-                                    "description": {
-                                        "type": "string"
-                                    },
-                                    "location": {
-                                        "type": "string"
-                                    },
-                                    "pricePerDay": {
-                                        "type": "number"
-                                    }
-                                },
-                                "required": [
-                                    "name",
-                                    "description",
-                                    "location",
-                                    "pricePerDay"
-                                ]
+                                "$ref": "#/components/schemas/Rental"
                             }
                         }
                     }
@@ -322,6 +392,9 @@
         "/admin/rental/rentals/{rentalId}": {
             "get": {
                 "summary": "Get One Rental",
+                "tags": [
+                    "Rental"
+                ],
                 "security": [
                     {
                         "BearerAuth": []
@@ -345,6 +418,9 @@
             },
             "put": {
                 "summary": "Update Rental",
+                "tags": [
+                    "Rental"
+                ],
                 "security": [
                     {
                         "BearerAuth": []
@@ -365,33 +441,22 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "name": {
-                                        "type": "string"
-                                    },
-                                    "description": {
-                                        "type": "string"
-                                    },
-                                    "location": {
-                                        "type": "string"
-                                    },
-                                    "pricePerDay": {
-                                        "type": "number"
-                                    }
-                                }
+                                "$ref": "#/components/schemas/Rental"
                             }
                         }
-                    },
-                    "responses": {
-                        "200": {
-                            "description": "Rental updated successfully."
-                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Rental updated successfully."
                     }
                 }
             },
             "delete": {
                 "summary": "Delete Rental",
+                "tags": [
+                    "Rental"
+                ],
                 "security": [
                     {
                         "BearerAuth": []
@@ -417,6 +482,9 @@
         "/admin/blogs": {
             "get": {
                 "summary": "Get All Blogs",
+                "tags": [
+                    "Blog"
+                ],
                 "security": [
                     {
                         "BearerAuth": []
@@ -430,6 +498,9 @@
             },
             "post": {
                 "summary": "Create Blog",
+                "tags": [
+                    "Blog"
+                ],
                 "security": [
                     {
                         "BearerAuth": []
@@ -440,19 +511,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "title": {
-                                        "type": "string"
-                                    },
-                                    "content": {
-                                        "type": "string"
-                                    }
-                                },
-                                "required": [
-                                    "title",
-                                    "content"
-                                ]
+                                "$ref": "#/components/schemas/Blog"
                             }
                         }
                     }
@@ -467,6 +526,9 @@
         "/admin/blogs/{blogId}": {
             "get": {
                 "summary": "Get One Blog",
+                "tags": [
+                    "Blog"
+                ],
                 "security": [
                     {
                         "BearerAuth": []
@@ -490,6 +552,9 @@
             },
             "put": {
                 "summary": "Update Blog",
+                "tags": [
+                    "Blog"
+                ],
                 "security": [
                     {
                         "BearerAuth": []
@@ -510,27 +575,22 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "title": {
-                                        "type": "string"
-                                    },
-                                    "content": {
-                                        "type": "string"
-                                    }
-                                }
+                                "$ref": "#/components/schemas/Blog"
                             }
                         }
-                    },
-                    "responses": {
-                        "200": {
-                            "description": "Blog updated successfully."
-                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Blog updated successfully."
                     }
                 }
             },
             "delete": {
                 "summary": "Delete Blog",
+                "tags": [
+                    "Blog"
+                ],
                 "security": [
                     {
                         "BearerAuth": []
@@ -553,9 +613,12 @@
                 }
             }
         },
-        "/admin/policies": {
+        "/admin/policy": {
             "post": {
                 "summary": "Create Policy",
+                "tags": [
+                    "Policy"
+                ],
                 "security": [
                     {
                         "BearerAuth": []
@@ -569,16 +632,19 @@
                                 "$ref": "#/components/schemas/PolicyInput"
                             }
                         }
-                    },
-                    "responses": {
-                        "200": {
-                            "description": "Policy created successfully."
-                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Policy created successfully."
                     }
                 }
             },
             "get": {
                 "summary": "Get All Policies",
+                "tags": [
+                    "Policy"
+                ],
                 "security": [
                     {
                         "BearerAuth": []
@@ -591,9 +657,12 @@
                 }
             }
         },
-        "/admin/policies/{id}": {
+        "/admin/policy/{id}": {
             "get": {
                 "summary": "Get Policy By ID",
+                "tags": [
+                    "Policy"
+                ],
                 "security": [
                     {
                         "BearerAuth": []
@@ -617,6 +686,9 @@
             },
             "patch": {
                 "summary": "Update Policy By ID",
+                "tags": [
+                    "Policy"
+                ],
                 "security": [
                     {
                         "BearerAuth": []
@@ -637,19 +709,22 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/PolicyUpdate"
+                                "$ref": "#/components/schemas/PolicyInput"
                             }
                         }
-                    },
-                    "responses": {
-                        "200": {
-                            "description": "Policy updated successfully."
-                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Policy updated successfully."
                     }
                 }
             },
             "delete": {
                 "summary": "Delete Policy By ID",
+                "tags": [
+                    "Policy"
+                ],
                 "security": [
                     {
                         "BearerAuth": []
@@ -672,9 +747,12 @@
                 }
             }
         },
-        "/admin/process-payment": {
+        "/admin/payment/process-payment": {
             "post": {
                 "summary": "Process Payment",
+                "tags": [
+                    "Payment"
+                ],
                 "security": [
                     {
                         "BearerAuth": []
@@ -688,18 +766,21 @@
                                 "$ref": "#/components/schemas/PaymentInput"
                             }
                         }
-                    },
-                    "responses": {
-                        "200": {
-                            "description": "Payment processed successfully."
-                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Payment processed successfully."
                     }
                 }
             }
         },
-        "/admin/get-payment": {
+        "/admin/payment/getpayment": {
             "get": {
                 "summary": "Get Payments By User",
+                "tags": [
+                    "Payment"
+                ],
                 "security": [
                     {
                         "BearerAuth": []
@@ -715,6 +796,9 @@
         "/admin/package": {
             "post": {
                 "summary": "Create Package",
+                "tags": [
+                    "Package"
+                ],
                 "security": [
                     {
                         "BearerAuth": []
@@ -728,16 +812,19 @@
                                 "$ref": "#/components/schemas/PackageInput"
                             }
                         }
-                    },
-                    "responses": {
-                        "200": {
-                            "description": "Package created successfully."
-                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Package created successfully."
                     }
                 }
             },
             "get": {
                 "summary": "Get All Packages",
+                "tags": [
+                    "Package"
+                ],
                 "security": [
                     {
                         "BearerAuth": []
@@ -753,6 +840,9 @@
         "/admin/package/{tripPackageId}": {
             "put": {
                 "summary": "Update Package",
+                "tags": [
+                    "Package"
+                ],
                 "security": [
                     {
                         "BearerAuth": []
@@ -776,16 +866,19 @@
                                 "$ref": "#/components/schemas/PackageInput"
                             }
                         }
-                    },
-                    "responses": {
-                        "200": {
-                            "description": "Package updated successfully."
-                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Package updated successfully."
                     }
                 }
             },
             "delete": {
                 "summary": "Delete Package",
+                "tags": [
+                    "Package"
+                ],
                 "security": [
                     {
                         "BearerAuth": []
@@ -849,6 +942,45 @@
                     "amount"
                 ]
             },
+            "Login": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "password": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "email",
+                    "password"
+                ]
+            },
+            "Rental": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "location": {
+                        "type": "string"
+                    },
+                    "pricePerDay": {
+                        "type": "number"
+                    }
+                },
+                "required": [
+                    "name",
+                    "description",
+                    "location",
+                    "pricePerDay"
+                ]
+            },
             "User": {
                 "type": "object",
                 "properties": {
@@ -866,10 +998,33 @@
                         "type": "integer"
                     },
                     "address": {
-                        "type": "integer",
-                        "minimum": 0
+                        "type": "string"
                     }
                 }
+            },
+            "UpdateUser": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "phone": {
+                        "type": "integer"
+                    },
+                    "address": {
+                        "type": "string"
+                    },
+                    "userId": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "userId",
+                    "name",
+                    "email",
+                    "password",
+                    "phone"
+                ]
             },
             "PolicyInput": {
                 "type": "object",
@@ -881,7 +1036,10 @@
                         "type": "string"
                     },
                     "coverage": {
-                        "type": "number"
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 },
                 "required": [
@@ -890,19 +1048,20 @@
                     "coverage"
                 ]
             },
-            "PolicyUpdate": {
+            "Blog": {
                 "type": "object",
                 "properties": {
-                    "name": {
+                    "title": {
                         "type": "string"
                     },
-                    "description": {
+                    "content": {
                         "type": "string"
-                    },
-                    "coverage": {
-                        "type": "number"
                     }
-                }
+                },
+                "required": [
+                    "title",
+                    "content"
+                ]
             }
         },
         "securitySchemes": {

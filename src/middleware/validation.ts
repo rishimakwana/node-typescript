@@ -68,7 +68,7 @@ export const validateEmailAndPassword: MiddlewareFunction = (req, res, next) => 
 
 function handleError(
   error: Error,
-  res: Response,
+  res: any,
   defaultMessage: string
 ): void {
   const errorMessage = error.message || defaultMessage;

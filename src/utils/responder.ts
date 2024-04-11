@@ -1,6 +1,6 @@
 import { Response } from "express";
 import MESSAGE from '../helper/message';
-export const sendErrorResponse = (error: any, res: Response) => {
+export const sendErrorResponse = (error: any, res: any) => {
     if (error?.status && error.message) {
         res.status(error.status).json({ status: MESSAGE.Failed, error: error.message });
     } else {
@@ -8,7 +8,7 @@ export const sendErrorResponse = (error: any, res: Response) => {
     }
 };
 
-export const sendSuccessResponse = (res: Response, OK: any, message: string, data?: any) => {
+export const sendSuccessResponse = (res: any, OK: any, message: string, data?: any) => {
     const response = {
         status: OK,
         message: message,

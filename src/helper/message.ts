@@ -3,6 +3,7 @@ const VALIDATION_MESSAGES = {
   PASSWORD_NOT_MATCH: "Incorrect password. Please try again.",
   INVALID_PASS_LENGTH: "Invalid password (minimum 8 characters required).",
   INVALID_PASS: "Invalid password.",
+  INVALID_TOKEN: "Invalid token.",
   INVALID_EMAIL: "Invalid email address.",
   INVALID_EMAIL_PWD: "Invalid email or Password.",
   INVALID_USERID: "Invalid user ID.",
@@ -10,12 +11,14 @@ const VALIDATION_MESSAGES = {
 };
 
 const USER_MESSAGES = {
-  USER_NOT_FOUND:"User not found.",
+  USERID_IS_NOT_CORRECT: "User id is invalid.",
+  USER_NOT_FOUND: "User not found.",
   ALREADY_CREATE: "User already registered.",
   CHECK_EMAIL_PASS: "Email or password is required.",
   EMAIL_REQR: "Email is required.",
   NAME_REQR: "Name is required.",
   INVALID_PHONE: "Invalid phone number.",
+  PHONE_MIN_LENGTH: "Phone number minimum length must be 10.",
   PHONE_REQR: "Phone number is required.",
   PASSWORD: "Password is required.",
   SOMETHING_WENT_WRONG: "Oops! Something went wrong.",
@@ -49,10 +52,24 @@ const BLOG_MESSAGES = {
   INVALID_BLOGId: "Invalid blog Id.",
 };
 const POLICY_MESSAGES = {
+  PREMIUM_REQR: "Policy premium is required.",
+  INVALID_PREMIUM: "Invalid policy premium.",
+  COVERAGE_REQR: "Coverage is required.",
+  DESCRIPTION_REQR: "Policy description is required.",
+  POLICY_NAME_REQR: "Policy name required.",
   POLICY_ADDED: "Policy added successfully.",
   POLICY_NOTFOUND: "Policy not found.",
-  INVALID_POLICY: "Invalid updates!"
+  POLICY_DELETED: "Policy deleted successfully.",
+  INVALID_POLICY: "Invalid updates!",
+  INVALID_TRIP_CANCELLATION_COVERAGE: "Trip cancellation coverage must be a boolean value.",
+  INVALID_EMERGENCY_MEDICAL_COVERAGE: "Emergency medical coverage must be a boolean value.",
+  INVALID_BAGGAGE_COVERAGE: "Baggage coverage must be a boolean value.",
+  TRIP_START_DATE_REQR: "Trip start date is required.",
+  INVALID_TRIP_START_DATE: "Invalid trip start date format. Please provide a valid ISO 8601 date format.",
+  TRIP_END_DATE_REQR: "Trip end date is required.",
+  INVALID_TRIP_END_DATE: "Invalid trip end date format. Please provide a valid ISO 8601 date format."
 };
+
 const RENTAL_MESSAGES = {
   RENTAL_NOT_FOUND: "Rental not found.",
   INVALID_RENTAL_DATA: "Invalid rental data provided.",
@@ -69,6 +86,16 @@ const BOOKING_MESSAGES = {
 };
 
 const PACKAGE_MESSAGES = {
+  NAME_REQR: "Package name is required.",
+  INVALID_NAME: "Invalid package name.",
+  DESCRIPTION_REQR: "Package description is required.",
+  INVALID_DESCRIPTION: "Invalid package description.",
+  PRICE_REQR: "Package price is required.",
+  INVALID_PRICE: "Invalid package price.",
+  DESTINATION_REQR: "Package destination is required.",
+  INVALID_DESTINATION: "Invalid package destination.",
+  DAYS_REQR: "Package duration (days) is required.",
+  INVALID_DAYS: "Invalid package duration (days). Must be a number.",
   PACKAGE_CREATED: "Trip package created successfully.",
   PACKAGE_NOTFOUND: "Trip package not found.",
   PACKAGE_UPDATED: "Trip package updated successfully.",
@@ -97,6 +124,7 @@ const GENERAL_MESSAGES = {
 const MESSAGE = {
   Failed: 0,
   OK: 1,
+  FETCH_DATA_SUCCESSFULLY: "Fetch data successfully",
   Success: "Success",
   ...POLICY_MESSAGES,
   ...VALIDATION_MESSAGES,

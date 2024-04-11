@@ -1,13 +1,15 @@
 import { packageService } from '../services/PackageService';
 import MESSAGE from '../helper/message';
 import { sendErrorResponse, sendSuccessResponse } from '../utils/responder';
+import { createEntity } from '../helper/commonServices';
+import Package from '../models/PackageSchema';
 
 export const PackageController = {
     createPackage: async (req: any, res: any) => {
         try {
-            const { name, description, destination, days, price } = req.body;
-            const packageData = await packageService.createPackage(name, description, destination, days, price);
-            sendSuccessResponse(res, MESSAGE.OK, MESSAGE.PACKAGE_CREATED, packageData);
+            const data = req.body;
+            const entity = await createEntity(Package, data);
+            sendSuccessResponse(res, MESSAGE.OK, MESSAGE.PACKAGE_CREATED, entity);
         } catch (error) {
             sendErrorResponse(error, res);
         }

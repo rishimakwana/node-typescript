@@ -1,12 +1,15 @@
 import { policyService } from '../services/PolicyService';
 import MESSAGE from '../helper/message';
 import { sendErrorResponse, sendSuccessResponse } from '../utils/responder';
+import { createEntity } from '../helper/commonServices';
+import Policy from '../models/PolicySchema';
 
 export const PolicyController = {
     createPolicy: async (req: any, res: any) => {
         try {
-            const policy = await policyService.createPolicy(req.body);
-            sendSuccessResponse(res, MESSAGE.OK, MESSAGE.POLICY_ADDED, policy);
+            const data = req.body;
+            const entity = await createEntity(Policy, data);
+            sendSuccessResponse(res, MESSAGE.OK, MESSAGE.POLICY_ADDED, entity);
         } catch (error) {
             sendErrorResponse(error, res);
         }
@@ -55,14 +58,12 @@ export const PolicyController = {
 
     deletePolicyById: async (req: any, res: any) => {
         try {
-            const policyId = req.params.id;
+            const { policyId } = req.params;
             const policy = await policyService.deletePolicyById(policyId);
-
             if (!policy) {
-                return res.status(404).send();
+                return res.status(404).json({ error: MESSAGE.POLICY_NOTFOUND });
             }
-
-            res.send(policy);
+            sendSuccessResponse(res, MESSAGE.OK, MESSAGE.POLICY_DELETED);
         } catch (error) {
             sendErrorResponse(error, res);
         }

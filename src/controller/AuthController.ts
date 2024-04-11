@@ -17,7 +17,7 @@ export const Authcontroller = {
             }
             req.body.role = role || 'user';
             const encryptedPassword = await encryptPass(password);
-            
+
             const newUser = new User({
                 ...req.body,
                 password: encryptedPassword
@@ -30,7 +30,10 @@ export const Authcontroller = {
             // newUser.tokenExpiration = expiration;
 
             const user = await newUser.save();
-            sendSuccessResponse(res, MESSAGE.OK, MESSAGE.SIGNUPSUCCESS, user);
+
+            let updateData: any = JSON.parse(JSON.stringify(user));
+            delete updateData.password;
+            sendSuccessResponse(res, MESSAGE.OK, MESSAGE.SIGNUPSUCCESS, updateData);
         } catch (error) {
             sendErrorResponse(error, res);
         }
@@ -49,10 +52,12 @@ export const Authcontroller = {
             if (!isPasswordValid) {
                 throw { status: 400, message: MESSAGE.INVALID_EMAIL_PWD };
             }
-            delete user.password;
+
+            let updateData: any = JSON.parse(JSON.stringify(user));
+            delete updateData.password;
             const token = await createToken(user.email, user._id);
 
-            return res.status(200).json({ success: true, user, token });
+            return res.status(200).json({ success: true, updateData, token });
         } catch (error) {
             sendErrorResponse(error, res);
         }
@@ -92,7 +97,6 @@ export const Authcontroller = {
                 throw { status: 400, message: MESSAGE.PASS_REQ_RESET_TOKEN };
             }
             const user: any = await findByResetToken(resetToken);
-
             if (!user) {
                 throw { status: 404, message: MESSAGE.INVALID_RESET_TOKEN };
             }
@@ -102,9 +106,12 @@ export const Authcontroller = {
                 return res.status(400).json({ error: MESSAGE.EXPIRED_RESET_TOKEN });
             }
 
-            user.resetToken = null;
-            user.tokenExpiration = null;
-            await user.save();
+            const encryptedPassword = await encryptPass(password);
+            await User.findOneAndUpdate(
+                { _id: user._id },
+                { $set: { password: encryptedPassword, resetToken: null, tokenExpiration: null } }
+            );
+            // await user.save();
 
             return res.status(200).json({ success: true, message: MESSAGE.PASSWORD_RESET_SUCCESS });
         } catch (error) {

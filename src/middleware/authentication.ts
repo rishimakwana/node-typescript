@@ -23,6 +23,11 @@ export const verifyToken = async (req: any, res: any, next: any) => {
         // Attach decoded user data to the request object
         req.userData = decoded;
 
+        const user = await findUserById(req.userData.userId);
+        if (!user) {
+            return res.status(404).json({ error: MESSAGE.INVALID_TOKEN });
+        }
+
         // Find user by user ID extracted from the token
         const findData = await findUserById(req.userData.userId);
         if (findData) {

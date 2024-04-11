@@ -24,7 +24,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 router.get('/profile', verifyToken, Usercontroller.getProfile);
-router.post('/update', upload.single('profilePicture'), verifyToken, Usercontroller.updateProfile);
-router.post('/deleteUser', verifyToken, Usercontroller.deleteUser);
+router.put('/update', upload.single('profilePicture'), verifyToken, Usercontroller.updateProfile);
+router.delete('/deleteUser', verifyToken, Usercontroller.deleteUser);
 
 export = router;

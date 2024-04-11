@@ -17,5 +17,9 @@ export const blogService = {
 
     deleteBlog: async (blogId: string) => {
         return await Blog.findByIdAndDelete(blogId);
+    },
+    findBlogById: async (blogId: any) => {
+        const findBlog = await Blog.findById(blogId);
+        return findBlog ? findBlog : null;
     }
 };
