@@ -1,7 +1,6 @@
-import { packageService } from '../services/PackageService';
 import MESSAGE from '../helper/message';
 import { sendErrorResponse, sendSuccessResponse } from '../utils/responder';
-import { createEntity } from '../helper/commonServices';
+import { createEntity, deleteEntityById, getAllEntity, updateEntity } from '../helper/commonServices';
 import Package from '../models/PackageSchema';
 
 export const PackageController = {
@@ -16,8 +15,8 @@ export const PackageController = {
     },
     getAllPackages: async (req: any, res: any) => {
         try {
-            const tripPackages = await packageService.getPackages();
-            res.status(200).json({ data: tripPackages });
+            const tripPackages = await getAllEntity(Package);
+            sendSuccessResponse(res, MESSAGE.OK, MESSAGE.FETCH_DATA_SUCCESSFULLY, tripPackages);
         } catch (error) {
             sendErrorResponse(error, res);
         }
@@ -26,12 +25,10 @@ export const PackageController = {
     updatePackage: async (req: any, res: any) => {
         try {
             const { tripPackageId } = req.params;
-            const { name, description, destination, days, price } = req.body;
-            const updatedPackage = await packageService.updatePackage(tripPackageId, name, description, destination, days, price);
-            if (!updatedPackage) {
-                throw { status: 404, message: MESSAGE.PACKAGE_NOTFOUND };
-            }
-            sendSuccessResponse(res, MESSAGE.OK, MESSAGE.PACKAGE_UPDATED, updatedPackage);
+            const data = req.body;
+            const updatedRental = await updateEntity(Package, tripPackageId, data, MESSAGE.PACKAGE_NOTFOUND)
+            sendSuccessResponse(res, MESSAGE.OK, MESSAGE.PACKAGE_UPDATED, updatedRental);
+
         } catch (error) {
             sendErrorResponse(error, res);
         }
@@ -40,11 +37,9 @@ export const PackageController = {
     deletePackage: async (req: any, res: any) => {
         try {
             const { tripPackageId } = req.params;
-            const deletedPackage = await packageService.deletePackage(tripPackageId);
-            if (!deletedPackage) {
-                throw { status: 404, message: MESSAGE.PACKAGE_NOTFOUND };
-            }
-            res.status(200).json({ message: MESSAGE.PACKAGE_DELETED });
+            await deleteEntityById(Package, tripPackageId, MESSAGE.PACKAGE_NOTFOUND);
+            sendSuccessResponse(res, MESSAGE.OK, MESSAGE.PACKAGE_DELETED);
+
         } catch (error) {
             sendErrorResponse(error, res);
         }

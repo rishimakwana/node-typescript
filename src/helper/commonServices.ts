@@ -47,3 +47,12 @@ export const updateEntity = async (Model: any, id: string, updateData: any, notF
         throw error;
     }
 };
+
+export const getAllEntity = async (Model: any,condition: any = {}) => {
+    try {
+        const entry = await Model.find(condition);
+        return entry;
+    } catch (error) {
+        throw error;
+    }
+};

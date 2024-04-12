@@ -1,7 +1,6 @@
-import { paymentService } from '../services/PaymentService';
 import MESSAGE from '../helper/message';
 import { sendErrorResponse, sendSuccessResponse } from '../utils/responder';
-import { createEntity } from '../helper/commonServices';
+import { createEntity, getAllEntity } from '../helper/commonServices';
 import Payment from '../models/PaymentSchema';
 
 export const PaymentController = {
@@ -19,14 +18,10 @@ export const PaymentController = {
 
     getPaymentsByUser: async (req: any, res: any) => {
         try {
-            console.log(req.userData,"req.userData-****");
-            
-            const userId = req.userData.userId;
-            const payments = await paymentService.getPaymentsByUser(userId);
-            res.status(200).json({
-                success: true,
-                payments,
-            });
+            const { userId } = req.userData;
+
+            const payments = await getAllEntity(Payment, { userId });
+            sendSuccessResponse(res, MESSAGE.OK, MESSAGE.FETCH_DATA_SUCCESSFULLY, payments);
         } catch (error) {
             sendErrorResponse(error, res);
         }

@@ -60,6 +60,7 @@ const POLICY_MESSAGES = {
   POLICY_ADDED: "Policy added successfully.",
   POLICY_NOTFOUND: "Policy not found.",
   POLICY_DELETED: "Policy deleted successfully.",
+  POLICY_UPDATED: "Policy updated successfully.",
   INVALID_POLICY: "Invalid updates!",
   INVALID_TRIP_CANCELLATION_COVERAGE: "Trip cancellation coverage must be a boolean value.",
   INVALID_EMERGENCY_MEDICAL_COVERAGE: "Emergency medical coverage must be a boolean value.",

@@ -1,14 +1,13 @@
-import { rentalService } from '../services/RentalService';
 import MESSAGE from '../helper/message';
 import { sendErrorResponse, sendSuccessResponse } from '../utils/responder';
 import Rental from '../models/RentalSchema';
-import { createEntity } from '../helper/commonServices';
+import { createEntity, deleteEntityById, getAllEntity, getEntityById, updateEntity } from '../helper/commonServices';
 
 export const RentalController = {
     getAllRentals: async (req: any, res: any) => {
         try {
-            const rentals = await rentalService.getAllRentals();
-            res.status(200).json({ success: true, rentals });
+            const rentals = await getAllEntity(Rental);
+            sendSuccessResponse(res, MESSAGE.OK, MESSAGE.FETCH_DATA_SUCCESSFULLY, rentals);
         } catch (error) {
             sendErrorResponse(error, res);
         }
@@ -25,10 +24,9 @@ export const RentalController = {
     },
     getRentalById: async (req: any, res: any) => {
         try {
-            const rental = await rentalService.getRentalById(req.params.rentalId);
-            if (!rental) {
-                throw { status: 404, message: MESSAGE.RENTAL_NOT_FOUND };
-            }
+
+            const { rentalId } = req.params;
+            const rental = await getEntityById(Rental, rentalId, MESSAGE.RENTAL_NOT_FOUND);
             sendSuccessResponse(res, MESSAGE.OK, MESSAGE.FETCH_DATA_SUCCESSFULLY, rental);
         } catch (error) {
             sendErrorResponse(error, res);
@@ -36,14 +34,10 @@ export const RentalController = {
     },
 
     updateRental: async (req: any, res: any) => {
-        const rentalId = req.params.rentalId;
-        const { name, description, location, pricePerDay } = req.body;
-
         try {
-            const updatedRental = await rentalService.updateRental(rentalId, name, description, location, pricePerDay);
-            if (!updatedRental) {
-                throw { status: 404, message: MESSAGE.RENTAL_NOT_FOUND };
-            }
+            const data = req.body;
+            const { rentalId } = req.params;
+            const updatedRental = await updateEntity(Rental, rentalId, data, MESSAGE.RENTAL_NOT_FOUND)
             sendSuccessResponse(res, MESSAGE.OK, MESSAGE.RENTAL_UPDATED, updatedRental);
         } catch (error) {
             sendErrorResponse(error, res);
@@ -51,13 +45,9 @@ export const RentalController = {
     },
 
     deleteRental: async (req: any, res: any) => {
-        const rentalId = req.params.rentalId;
-
         try {
-            const deletedRental = await rentalService.deleteRental(rentalId);
-            if (!deletedRental) {
-                throw { status: 404, message: MESSAGE.RENTAL_NOT_FOUND };
-            }
+            const { rentalId } = req.params;
+            await deleteEntityById(Rental, rentalId, MESSAGE.RENTAL_NOT_FOUND);
             sendSuccessResponse(res, MESSAGE.OK, MESSAGE.RENTAL_DELETED);
         } catch (error) {
             sendErrorResponse(error, res);
