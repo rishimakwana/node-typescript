@@ -6,6 +6,8 @@ import Blog from '../models/BlogSchema';
 import Package from '../models/PackageSchema';
 import Policy from '../models/PolicySchema';
 import Rental from '../models/RentalSchema';
+import { JWT_SECRET } from '../config';
+import jwt from 'jsonwebtoken';
 
 export const Usercontroller = {
     getProfile: async (req: any, res: any) => {
@@ -15,6 +17,24 @@ export const Usercontroller = {
 
             if (!userData) {
                 throw { status: 404, message: MESSAGE.USER_NOT_FOUND };
+            }
+            return res.status(200).json({ message: true, userData });
+        } catch (error) {
+            sendErrorResponse(error, res);
+        }
+    },
+    getUserByToken: async (req: any, res: any) => {
+        try {
+            const token = req.body.token || req.query.token || req.headers["x-access-token"] || req.headers["authorization"];
+            if (!token) {
+                return res.status(403).json({ status: MESSAGE.Failed, message: 'A token is required for authentication' });
+            }
+            // Check if the token starts with "Bearer " and remove it
+            const tokenWithoutBearer = token.replace(/^Bearer\s+/i, '');
+            const userData: any = await jwt.verify(tokenWithoutBearer, JWT_SECRET);
+            const user = await findUserById(userData.userId);
+            if (!user) {
+                return res.status(404).json({ error: MESSAGE.INVALID_TOKEN });
             }
             return res.status(200).json({ message: true, userData });
         } catch (error) {

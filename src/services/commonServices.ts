@@ -48,10 +48,17 @@ export const updateEntity = async (Model: any, id: string, updateData: any, notF
     }
 };
 
-export const getAllEntity = async (Model: any,condition: any = {}) => {
+export const getAllEntity = async (Model: any, condition: any = {}, paginationOptions: any = {}) => {
     try {
-        const entry = await Model.find(condition);
-        return entry;
+        const { searchTerm = '', page = 1, pageSize = 10, orderBy = 'created', orderType = 'desc' } = paginationOptions;
+        const skip = (page - 1) * pageSize;
+        const query = Model.find(condition)
+            .skip(skip)
+            .limit(pageSize)
+            .sort({ [orderBy]: orderType === 'asc' ? 1 : -1 });
+
+        const entries = await query.exec();
+        return entries;
     } catch (error) {
         throw error;
     }

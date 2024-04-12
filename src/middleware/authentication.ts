@@ -28,15 +28,17 @@ export const verifyToken = async (req: any, res: any, next: any) => {
             return res.status(404).json({ error: MESSAGE.INVALID_TOKEN });
         }
 
-        // Find user by user ID extracted from the token
-        const findData = await findUserById(req.userData.userId);
-        if (findData) {
-            // If user is found, proceed to the next middleware
-            next();
-        } else {
-            // If user is not found, throw an unauthorized error
-            throw { status: 401, message: MESSAGE.UNAUTHORIZED };
-        }
+        next()
+
+        // // Find user by user ID extracted from the token
+        // const findData = await findUserById(req.userData.userId);
+        // if (findData) {
+        //     // If user is found, proceed to the next middleware
+        //     next();
+        // } else {
+        //     // If user is not found, throw an unauthorized error
+        //     throw { status: 401, message: MESSAGE.UNAUTHORIZED };
+        // }
 
     } catch (err: any) {
         if (err.status === 401) {

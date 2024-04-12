@@ -21,23 +21,23 @@ let redisClient: any;
 export const AdminController = {
     getAllUsers: async (req: any, res: any) => {
         try {
-            let CACHE_KEY = "users"
+            // let CACHE_KEY = "users"
             let isCached = false;
             let allUsers
-            const cacheResults = await redisClient.get(CACHE_KEY);
-            if (cacheResults) {
-                console.log("if cache results")
-                isCached = true;
-                allUsers = JSON.parse(cacheResults);
-            } else {
-                console.log("else cache results")
+            // const cacheResults = await redisClient.get(CACHE_KEY);
+            // if (cacheResults) {
+            //     console.log("if cache results")
+            //     isCached = true;
+            //     allUsers = JSON.parse(cacheResults);
+            // } else {
+                // console.log("else cache results")
                 allUsers = await getAllUsers();
                 if (allUsers.length === 0) {
                     throw "API returned an empty array";
                 }
-                await redisClient.set(CACHE_KEY, JSON.stringify(allUsers));
-                await redisClient.expire("test", 10)
-            }
+                // await redisClient.set(CACHE_KEY, JSON.stringify(allUsers));
+                // await redisClient.expire("test", 10)
+            // }
             return res.status(200).json({ fromCache: isCached, success: true, users: allUsers });
 
             // const allUsers = await getAllUsers();
