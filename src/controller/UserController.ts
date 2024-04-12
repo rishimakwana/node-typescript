@@ -1,10 +1,11 @@
 import MESSAGE from '../helper/message';
 import { sendErrorResponse, sendSuccessResponse } from '../utils/responder';
 import { findUserById, updateUser } from '../services/UserService';
-import { blogService } from '../services/BlogService';
-import { packageService } from '../services/PackageService';
-import { policyService } from '../services/PolicyService';
-import { rentalService } from '../services/RentalService';
+import { getAllEntity, getEntityById } from '../services/commonServices';
+import Blog from '../models/BlogSchema';
+import Package from '../models/PackageSchema';
+import Policy from '../models/PolicySchema';
+import Rental from '../models/RentalSchema';
 
 export const Usercontroller = {
     getProfile: async (req: any, res: any) => {
@@ -66,8 +67,8 @@ export const Usercontroller = {
     //get blogs
     getBlogs: async (req: any, res: any) => {
         try {
-            const blogs = await blogService.getBlogs();
-            res.status(200).json({ data: blogs });
+            const blogs = await getAllEntity(Blog);
+            sendSuccessResponse(res, MESSAGE.OK, MESSAGE.FETCH_DATA_SUCCESSFULLY, blogs);
         } catch (error) {
             sendErrorResponse(error, res);
         }
@@ -76,8 +77,8 @@ export const Usercontroller = {
     // package
     getPackages: async (req: any, res: any) => {
         try {
-            const tripPackages = await packageService.getPackages();
-            res.status(200).json({ data: tripPackages });
+            const tripPackages = await getAllEntity(Package);
+            sendSuccessResponse(res, MESSAGE.OK, MESSAGE.FETCH_DATA_SUCCESSFULLY, tripPackages);
         } catch (error) {
             sendErrorResponse(error, res);
         }
@@ -85,14 +86,10 @@ export const Usercontroller = {
 
     // policy
     getPolicyById: async (req: any, res: any) => {
-        const _id = req.params.id;
-
         try {
-            const policy = await policyService.getPolicyById(_id);
-            if (!policy) {
-                throw { status: 404, message: MESSAGE.POLICY_NOTFOUND };
-            }
-            res.send(policy);
+            const { id } = req.params;
+            const policy = await getEntityById(Policy, id, MESSAGE.POLICY_NOTFOUND);
+            sendSuccessResponse(res, MESSAGE.OK, MESSAGE.FETCH_DATA_SUCCESSFULLY, policy);
         } catch (error) {
             sendErrorResponse(error, res);
         }
@@ -100,13 +97,10 @@ export const Usercontroller = {
 
     //rental
     getRentalById: async (req: any, res: any) => {
-        const rentalId = req.params.rentalId;
         try {
-            const rental = await rentalService.getRentalById(rentalId);
-            if (!rental) {
-                throw { status: 404, message: MESSAGE.RENTAL_NOT_FOUND };
-            }
-            res.status(200).json({ success: true, rental });
+            const { rentalId } = req.params;
+            const rental = await getEntityById(Rental, rentalId, MESSAGE.RENTAL_NOT_FOUND);
+            sendSuccessResponse(res, MESSAGE.OK, MESSAGE.FETCH_DATA_SUCCESSFULLY, rental);
         } catch (error) {
             sendErrorResponse(error, res);
         }

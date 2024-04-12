@@ -1,6 +1,6 @@
 import MESSAGE from '../helper/message';
 import { sendErrorResponse, sendSuccessResponse } from '../utils/responder';
-import { createEntity, deleteEntityById, getAllEntity, updateEntity } from '../helper/commonServices';
+import { createEntity, deleteEntityById, getAllEntity, updateEntity } from '../services/commonServices';
 import Package from '../models/PackageSchema';
 
 export const PackageController = {

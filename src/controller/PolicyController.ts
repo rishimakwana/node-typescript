@@ -1,6 +1,6 @@
 import MESSAGE from '../helper/message';
 import { sendErrorResponse, sendSuccessResponse } from '../utils/responder';
-import { createEntity, deleteEntityById, getAllEntity, getEntityById, updateEntity } from '../helper/commonServices';
+import { createEntity, deleteEntityById, getAllEntity, getEntityById, updateEntity } from '../services/commonServices';
 import Policy from '../models/PolicySchema';
 
 export const PolicyController = {

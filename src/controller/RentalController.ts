@@ -1,7 +1,7 @@
 import MESSAGE from '../helper/message';
 import { sendErrorResponse, sendSuccessResponse } from '../utils/responder';
 import Rental from '../models/RentalSchema';
-import { createEntity, deleteEntityById, getAllEntity, getEntityById, updateEntity } from '../helper/commonServices';
+import { createEntity, deleteEntityById, getAllEntity, getEntityById, updateEntity } from '../services/commonServices';
 
 export const RentalController = {
     getAllRentals: async (req: any, res: any) => {

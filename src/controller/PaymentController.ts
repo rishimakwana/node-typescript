@@ -1,6 +1,6 @@
 import MESSAGE from '../helper/message';
 import { sendErrorResponse, sendSuccessResponse } from '../utils/responder';
-import { createEntity, getAllEntity } from '../helper/commonServices';
+import { createEntity, getAllEntity } from '../services/commonServices';
 import Payment from '../models/PaymentSchema';
 
 export const PaymentController = {
