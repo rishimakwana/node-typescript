@@ -121,12 +121,32 @@ const GENERAL_MESSAGES = {
   PAYMENT_SUCCESS: "Payment Success.",
   RATE_LIMIT_EXCEEDED: "Rate limit exceeded, Please try after some time",
 };
-
+const HOTEL_MESSAGES = {
+  HOTEL_NAME_REQUIRED: "Hotel name is required.",
+  LOCATION_REQUIRED: "Location is required.",
+  RATING_REQUIRED: "Rating is required.",
+  INVALID_RATING: "Rating must be a number between 0 and 5.",
+  DESCRIPTION_REQUIRED: "Description is required.",
+  AMENITIES_REQUIRED: "At least one amenity is required.",
+  INVALID_IMAGE_URL: "Invalid image URL.",
+  HOTEL_CREATED: "Hotel created successfully.",
+  HOTEL_NOT_FOUND: "Hotel not found.",
+  HOTEL_UPDATED: "Hotel updated successfully.",
+  HOTEL_DELETED: "Hotel deleted successfully."
+};
+const FLIGHT_MESSAGES = {
+  FLIGHT_CREATED: "Flight created successfully.",
+  FLIGHT_NOT_FOUND: "Flight not found.",
+  FLIGHT_UPDATED: "Flight updated successfully.",
+  FLIGHT_DELETED: "Flight deleted successfully."
+};
 const MESSAGE = {
   Failed: 0,
   OK: 1,
   FETCH_DATA_SUCCESSFULLY: "Fetch data successfully",
   Success: "Success",
+  ...HOTEL_MESSAGES,
+  ...FLIGHT_MESSAGES,
   ...POLICY_MESSAGES,
   ...VALIDATION_MESSAGES,
   ...USER_MESSAGES,
